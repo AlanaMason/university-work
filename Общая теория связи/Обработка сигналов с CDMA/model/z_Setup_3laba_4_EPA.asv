@@ -1,0 +1,81 @@
+% 1 test, QAM-16 
+
+
+Interleaver.isTransparent = false;
+Interleaver.N = 38400 / 256 * 2;
+
+Mapper.isTransparent = false;
+Mapper.ModulationOrder = 4;
+
+Sig.isTransparent = false;
+Sig.EqualizerOn = false;
+Sig.isNOTScramb = false;
+Sig.RayCount = 1;
+
+Channel.isTransparent = false;
+Channel.FadingType = 'EPA';
+Channel.DopplerShift = 5;
+
+Common.SaveFileName = 'EPA, Ray = 1';
+
+% End of Params
+% 2 test, QAM-16 
+
+Interleaver.isTransparent = false;
+Interleaver.N = 38400 / 256 * 2;
+
+Mapper.isTransparent = false;
+Mapper.ModulationOrder = 4;
+
+Sig.isTransparent = false;
+Sig.EqualizerOn = false;
+Sig.isNOTScramb = false;
+Sig.RayCount = 2;
+
+Channel.isTransparent = false;
+Channel.FadingType = 'EPA';
+Channel.DopplerShift = 5;
+
+Common.SaveFileName = 'EPA, Ray = 2';
+
+% End of Params
+% 3 test, QAM-16 
+
+Interleaver.isTransparent = false;
+Interleaver.N = 38400 / 256 * 2;
+
+Mapper.isTransparent = false;
+Mapper.ModulationOrder = 4;
+
+Sig.isTransparent = false;
+Sig.EqualizerOn = false;
+Sig.isNOTScramb = false;
+Sig.RayCount = 3;
+
+Channel.isTransparent = false;
+Channel.FadingType = 'EPA';
+Channel.DopplerShift = 5;
+
+Common.SaveFileName = 'EPA, Ray = 3';
+
+% End of Params
+% 3 test, QAM-16 
+
+Source.NumBitsPerFrame = 38400 / 256 * 2;
+
+Interleaver.isTransparent = false;
+Interleaver.N = 38400 / 256 * 2;
+
+Mapper.isTransparent = false;
+Mapper.ModulationOrder = 4;
+
+Sig.isTransparent = false;
+Sig.EqualizerOn = false;
+Sig.isNOTScramb = false;
+Sig.RayCount = 4;
+
+Channel.isTransparent = false;
+Channel.FadingType = 'EPA';
+Channel.DopplerShift = 5;
+
+Common.SaveFileName = 'EPA, Ray = 4';

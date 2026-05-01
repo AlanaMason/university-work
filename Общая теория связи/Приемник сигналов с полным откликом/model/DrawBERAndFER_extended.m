@@ -1,0 +1,191 @@
+function DrawBERAndFER_extended(DirName, lineParams, colorParams, sortByDate, subPlotNum)
+%
+% Функция прорисовки кривых вероятности битовой и кадровой ошибок
+    
+    
+    
+    if nargin < 2
+        lineParams = [];
+    end
+
+    if nargin < 3
+        colorParams = [];
+    end
+
+    if nargin < 4
+        sortByDate = false;
+    end
+    
+    if nargin < 5
+        subPlotNum = 1;
+    end
+
+    
+
+    lineParams_num = length(lineParams);
+    colorParams_num = length(colorParams);
+    lineParams_idx = 1;
+    colorParams_idx = 1;
+
+    % Директория, из которой будут взяты результаты
+        if nargin == 0
+            DirName = 'Results';
+        end
+
+    % Получим информацию о содержимом директории
+        Listing = dir(DirName);
+        if sortByDate
+            [~, ind] = sort({Listing.date});
+            Listing = Listing(ind);
+        end
+
+    % Инициализируем cell-массив для хранения имён файлов, из которых потом
+    % сделаем легенду
+        Names = cell(0);
+
+    % Цикл по всем файлам директории
+        for k = 1:length(Listing)
+            % Надо проверять, чтобы рассматриваемый элемент был файлом и
+            % имел расширение mat
+                if ~Listing(k).isdir
+                    FName = Listing(k).name;
+                    if length(FName) > 4
+                        if isequal(FName(end-3:end), '.mat')
+                            % Добавим имя файла к списку
+                                Names{end+1} = FName(1:end-4); %#ok<AGROW>
+                        end
+                    end
+                end
+        end
+
+        if isempty(Names)
+            error('Не найдены файлы с результатами!');
+        end
+
+    % Прорисовка BER и FER
+        % Создадим два полотна и оси
+            f  = cell(2, 1);
+            ax = cell(2*subPlotNum, 1);
+            for k = 1:2
+                f{k} = figure;
+                for subplotN = 1:subPlotNum
+                    ax{(k-1)*subPlotNum+subplotN} = subplot(1,subPlotNum,subplotN);
+                end
+                
+            end
+
+            subPlotCurvesNum = length(Names)/(subPlotNum);
+            curveNum = 1;
+
+
+
+        % Цикл по всем уже известным файлам
+            for k = 1:length(Names)
+
+                if lineParams_idx > lineParams_num
+                    lineParams_idx = 1;
+                end
+
+                if colorParams_idx > colorParams_num
+                    colorParams_idx = 1;
+                end
+                
+                
+                % Загрузка результатов
+                load(sprintf("%s/%s.mat",DirName, Names{k}), 'Res');
+                % Прорисовка без затирания старых рисунков
+                figure(f{1});
+                
+                if subPlotNum > 0
+                    subplot(1,subPlotNum,ceil(curveNum/subPlotCurvesNum));
+                end
+
+                if lineParams_num > 0 && colorParams_num > 0
+                        hold on;
+                        plot(Res.h2dBs, Res.NumErBits ./ Res.NumTrBits, ...
+                            'LineWidth', 1, 'MarkerSize', 8, 'Marker', '.','LineStyle',lineParams(lineParams_idx)...
+                            ,'Color',colorParams(colorParams_idx));          
+                elseif lineParams_num > 0
+                        hold on;
+                        plot(Res.h2dBs, Res.NumErBits ./ Res.NumTrBits, ...
+                            'LineWidth', 1, 'MarkerSize', 8, 'Marker', '.','LineStyle',lineParams(lineParams_idx));
+                elseif colorParams_num > 0
+                        hold on;
+                        plot(Res.h2dBs, Res.NumErBits ./ Res.NumTrBits, ...
+                            'LineWidth', 1, 'MarkerSize', 8, 'Marker', '.'...
+                            ,'Color',colorParams(colorParams_idx));
+                else
+                        hold on;
+                        plot(Res.h2dBs, Res.NumErBits ./ Res.NumTrBits, ...
+                            'LineWidth', 1, 'MarkerSize', 8, 'Marker', '.');
+                end
+
+
+
+               figure(f{2});
+
+               if subPlotNum > 0
+                    subplot(1,subPlotNum,ceil(curveNum/subPlotCurvesNum));
+               end
+
+               if lineParams_num > 0 && colorParams_num > 0
+                        hold on;
+                        plot(Res.h2dBs, Res.NumErFrames ./ ...
+                            Res.NumTrFrames, 'LineWidth', 1, ...
+                            'MarkerSize', 8, 'Marker', '.', 'LineStyle',lineParams(lineParams_idx)...
+                            ,'Color',colorParams(colorParams_idx));
+                elseif lineParams_num > 0
+                        hold on;
+                        plot(Res.h2dBs, Res.NumErFrames ./ ...
+                            Res.NumTrFrames, 'LineWidth', 1, ...
+                            'MarkerSize', 8, 'Marker', '.', 'LineStyle',lineParams(lineParams_idx));
+                elseif colorParams_num > 0
+                        hold on;
+                        plot(Res.h2dBs, Res.NumErFrames ./ ...
+                            Res.NumTrFrames, 'LineWidth', 1, ...
+                            'MarkerSize', 8, 'Marker', '.'...
+                            ,'Color',colorParams(colorParams_idx));
+               else
+                        hold on;
+                        plot(Res.h2dBs, Res.NumErFrames ./ ...
+                            Res.NumTrFrames, 'LineWidth', 1, ...
+                            'MarkerSize', 8, 'Marker', '.');
+               end
+
+               lineParams_idx = lineParams_idx + 1;
+               colorParams_idx = colorParams_idx + 1;
+               curveNum = curveNum +1;
+                
+            end
+
+        for k = 1:2
+            figure(f{k});
+
+            % Добавим сетку
+                
+
+            % Сделаем традиционный масштаб по оси ординат
+                for subplotN = 1:subPlotNum
+                    grid on;
+                    subplot(1,subPlotNum,subplotN)
+                    set(ax{(k-1)*subPlotNum+subplotN}, 'YScale', 'log');
+
+                    % Подпишем рисунок и ось абсцисс
+                    if k == 1
+                        title('BER');
+                    else
+                        title('FER');
+                    end
+                    xlabel('{\ith}^2 (dB)');
+                    
+                % Добавим легенду
+                    if k == 1
+                        legend([Names((subplotN-1)*subPlotCurvesNum + (1:subPlotCurvesNum))], 'Interpreter', 'none');
+                    else
+                        legend(Names((subplotN-1)*subPlotCurvesNum  + (1:subPlotCurvesNum)), 'Interpreter', 'none');
+                    end
+                end
+                
+
+            
+        end

@@ -1,0 +1,42 @@
+% searchListMove и folderListMove нужны чтобы распихать файлы соднржащие searchListMove
+% в соответствующие папки folderListMove
+% 
+% folderList - папки из которых рисовать
+% lineParams - параметры линий, которые будут циклически менятся при рисовании
+% colorParams - аналагично lineParams, но для цвета
+% второй аргумет drawFolders - sortByDate. Если true, то файлы будут
+% отсортированы по дате при рисовании
+% трети
+%% 1
+searchListMove = ["p1_1" "p1_2" "p1_3"];
+folderListMove = ["1_1"   "1_2" "1_3" ];
+
+moveFiles(searchListMove,folderListMove)
+
+%% 1.1 1.2
+folderList = ["1_1" "1_2"];
+lineParams = ["-" "--" ":"];
+%lineParams = ["-" "-" "-" "--" "--" "--" ":" ":" ":"];
+colorParams = ["r" "r" "r" "g" "g" "g" "b" "b" "b"];
+%colorParams = ["r" "r" "r" "g" "g" "g" "b" "b" "b"];
+
+drawFolders(folderList, true, 2,lineParams,colorParams)
+
+%% 1.3
+drawFolders("1_3", true, 2);
+
+%% 2
+searchListMove = ["p2_1" "p2_2"];
+folderListMove = ["2_1"   "2_2"];
+
+moveFiles(searchListMove,folderListMove)
+
+%% 2.1
+folderList = ["2_1"];
+lineParams = ["-" "--" ":"];
+%lineParams = ["-" "-" "-" "--" "--" "--" ":" ":" ":"];
+colorParams = ["r" "r" "r" "g" "g" "g" "b" "b" "b"];
+%colorParams = ["r" "g" "b" ];
+
+
+drawFolders(folderList, true, 2, lineParams, colorParams)
